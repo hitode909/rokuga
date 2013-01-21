@@ -169,9 +169,34 @@ FramesPlayer = (function() {
     return +($('.wait-ms')).val();
   };
   FramesPlayer.prototype.saveAsDataURL = function() {
-    var saved;
+    var activeURLs, frame, saved;
     saved = $.Deferred();
-    saved.resolve('http://htn.to/motemen');
+    activeURLs = (function() {
+      var _i, _len, _ref, _results;
+      _ref = this.frames;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        frame = _ref[_i];
+        if (frame.isActive()) {
+          _results.push(frame.getURL());
+        }
+      }
+      return _results;
+    }).call(this);
+    $.ajax({
+      type: 'POST',
+      url: '/save',
+      dataType: 'text',
+      data: {
+        wait: this.getWait(),
+        frames: activeURLs
+      }
+    }).done(function(gif_url) {
+      return saved.resolve(gif_url);
+    }).fail(function(error) {
+      console.log(error);
+      return saved.fail();
+    });
     return saved.promise();
   };
   return FramesPlayer;

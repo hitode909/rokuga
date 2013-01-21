@@ -150,7 +150,21 @@ class FramesPlayer
 
   saveAsDataURL: ->
     saved = do $.Deferred
-    saved.resolve 'http://htn.to/motemen'
+
+    activeURLs = (do frame.getURL for frame in @frames when frame.isActive())
+
+    $.ajax
+      type: 'POST'
+      url: '/save'
+      dataType: 'text'
+      data:
+        wait: do @getWait
+        frames: activeURLs
+    .done (gif_url) ->
+      saved.resolve gif_url
+    .fail (error) ->
+      console.log error
+      saved.fail()
 
     do saved.promise
 
