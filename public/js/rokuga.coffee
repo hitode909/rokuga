@@ -99,6 +99,9 @@ class Frame
       'background-image': "url('#{@url}')"
     @$element
 
+  getElement: ->
+    @$element
+
   isActive: ->
     (@$element.find 'input').prop 'checked'
 
@@ -115,10 +118,13 @@ class FramesPlayer
     return if @play_timer
 
     @currentFrame = 0
+    @lastFrame = 0
 
     @play_timer = null
 
     step = =>
+      (do @frames[@lastFrame].getElement).removeClass 'current'
+
       try_count = 0
       frame = null
       while try_count < @frames.length
@@ -130,6 +136,10 @@ class FramesPlayer
 
       @$screen.attr
         src: do frame.getURL
+
+      (do frame.getElement).addClass 'current'
+
+      @lastFrame = @currentFrame
 
       @play_timer = setTimeout step, do @getWait
 
@@ -146,7 +156,10 @@ class FramesPlayer
       do @play
 
   getWait: ->
-    + ($ '.wait-ms').val()
+    (do @getDelay) * 10
+
+  getDelay: ->
+    + ($ '.delay').val()
 
   saveAsDataURL: ->
     saved = do $.Deferred
@@ -158,7 +171,7 @@ class FramesPlayer
       url: '/save'
       dataType: 'text'
       data:
-        wait: do @getWait
+        delay: do @getDelay
         frames: activeURLs
     .done (gif_url) ->
       saved.resolve gif_url
@@ -218,8 +231,10 @@ $ ->
         ($ '.save-button').click ->
           console.log 'save-button'
           (do player.saveAsDataURL).done (url) ->
-            console.log url
             $img = $ '<img>'
             $img.attr
               src: url
             ($ '.gallery').append $img
+
+            $img.on 'click', ->
+              window.open $img.attr 'src'

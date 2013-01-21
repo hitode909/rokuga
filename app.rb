@@ -8,9 +8,9 @@ class RokugaApp < Sinatra::Base
   end
 
   post "/save" do
-    wait = params[:wait].to_i
-    unless wait
-      halt 400, 'wait required'
+    delay = params[:delay].to_i
+    unless delay
+      halt 400, 'delay required'
     end
 
     frames = params[:frames]
@@ -20,7 +20,7 @@ class RokugaApp < Sinatra::Base
     }
 
     animation = Animation.new
-    animation.set_delay [(wait/10).to_i, 1].max
+    animation.set_delay delay
 
     data_urls.each{|url|
       animation.add_frame url.body

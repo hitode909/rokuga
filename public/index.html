@@ -3,12 +3,14 @@
     <script src="/js/jquery-1.9.0.min.js"></script>
     <script src="/js/underscore-min.js"></script>
     <script src="/js/rokuga.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="/css/rokuga.css" rel="stylesheet" media="screen">
   </head>
   <body>
     <div class="container">
-      <h1>h1</h1>
+      <h1>rokuga</h1>
       <div class="drop-here">
         drop here
       </div>
@@ -18,13 +20,15 @@
         <img/>
       </div>
       <div class="controllers">
-        <button class="pause-button">
-          pause
+        <button class="pause-button btn">
+          <i class="icon-pause"></i>
         </button>
-        <button class="save-button">
-          save
+        <button class="save-button btn">
+          <i class="icon-download-alt"></i>
         </button>
-        <input class="wait-ms" type="range" min="10" max="1000" value="100" step="10" />
+        <div class="delay-controller">
+          <input class="delay" type="range" min="1" max="100" value="10" step="1" />
+        </div>
       </div>
       <div class="frames">
       </div>

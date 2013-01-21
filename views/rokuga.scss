@@ -1,15 +1,19 @@
 .drop-here {
-    border: 1px solid black;
+    border: 1px solid #333;
     font-size: 200%;
     font-weight: bold;
     text-align: center;
-    padding: 20px;
+    padding: 40px;
 }
 
 .drop-here.active {
-    background: #aaf;
+    background: #dceaf4;
 }
 
+.sampling-preview, .player {
+    margin: 20px;
+    text-align: center;
+}
 
 .frames {
 
@@ -30,10 +34,33 @@
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        background-color: black;
+        background-color: #333;
+    }
+
+    .frame-item.current {
+        opacity: 0.7;
     }
 }
 
 .controllers {
+    margin-top: 10px;
+    margin-bottom: 10px;
     display: none;
+
+    .delay-controller {
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        .delay {
+            width: 100%;
+        }
+    }
+}
+
+.gallery {
+    margin-top: 20px;
+
+    img {
+        cursor: pointer;
+    }
 }

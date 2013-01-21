@@ -111,6 +111,9 @@ Frame = (function() {
     });
     return this.$element;
   };
+  Frame.prototype.getElement = function() {
+    return this.$element;
+  };
   Frame.prototype.isActive = function() {
     return (this.$element.find('input')).prop('checked');
   };
@@ -131,9 +134,11 @@ FramesPlayer = (function() {
       return;
     }
     this.currentFrame = 0;
+    this.lastFrame = 0;
     this.play_timer = null;
     step = __bind(function() {
       var frame, try_count;
+      (this.frames[this.lastFrame].getElement()).removeClass('current');
       try_count = 0;
       frame = null;
       while (try_count < this.frames.length) {
@@ -150,6 +155,8 @@ FramesPlayer = (function() {
       this.$screen.attr({
         src: frame.getURL()
       });
+      (frame.getElement()).addClass('current');
+      this.lastFrame = this.currentFrame;
       return this.play_timer = setTimeout(step, this.getWait());
     }, this);
     return step();
@@ -166,7 +173,10 @@ FramesPlayer = (function() {
     }
   };
   FramesPlayer.prototype.getWait = function() {
-    return +($('.wait-ms')).val();
+    return (this.getDelay()) * 10;
+  };
+  FramesPlayer.prototype.getDelay = function() {
+    return +($('.delay')).val();
   };
   FramesPlayer.prototype.saveAsDataURL = function() {
     var activeURLs, frame, saved;
@@ -188,7 +198,7 @@ FramesPlayer = (function() {
       url: '/save',
       dataType: 'text',
       data: {
-        wait: this.getWait(),
+        delay: this.getDelay(),
         frames: activeURLs
       }
     }).done(function(gif_url) {
@@ -258,12 +268,14 @@ $(function() {
           console.log('save-button');
           return (player.saveAsDataURL()).done(function(url) {
             var $img;
-            console.log(url);
             $img = $('<img>');
             $img.attr({
               src: url
             });
-            return ($('.gallery')).append($img);
+            ($('.gallery')).append($img);
+            return $img.on('click', function() {
+              return window.open($img.attr('src'));
+            });
           });
         });
       });
