@@ -204,7 +204,6 @@ FramesPlayer = (function() {
     }).done(function(gif_url) {
       return saved.resolve(gif_url);
     }).fail(function(error) {
-      console.log(error);
       return saved.fail();
     });
     return saved.promise();
@@ -220,14 +219,9 @@ $(function() {
   return $(file_handler).on('enter', function() {
     return $('.drop-here').addClass('active');
   }).on('leave', function() {
-    $('.drop-here').removeClass('active');
-    return console.log('leave');
-  }).on('drop', function(event, files) {
-    console.log('drop');
-    return console.log(files);
+    return $('.drop-here').removeClass('active');
   }).on('data_url_prepared', function(event, urls) {
     var $video, content;
-    console.log('prepared');
     $('.drop-here').remove();
     content = urls[0];
     $video = $('<video>');
@@ -265,7 +259,6 @@ $(function() {
           return player.pause();
         });
         return ($('.save-button')).click(function() {
-          console.log('save-button');
           return (player.saveAsDataURL()).done(function(url) {
             var $img;
             $img = $('<img>');

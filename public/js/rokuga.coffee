@@ -176,7 +176,6 @@ class FramesPlayer
     .done (gif_url) ->
       saved.resolve gif_url
     .fail (error) ->
-      console.log error
       saved.fail()
 
     do saved.promise
@@ -190,12 +189,7 @@ $ ->
     $('.drop-here').addClass 'active'
   .on 'leave', ->
     $('.drop-here').removeClass 'active'
-    console.log 'leave'
-  .on 'drop', (event, files) ->
-    console.log 'drop'
-    console.log files
   .on 'data_url_prepared', (event, urls) ->
-    console.log 'prepared'
     do $('.drop-here').remove
     content = urls[0]
     $video = $ '<video>'
@@ -229,7 +223,6 @@ $ ->
           do player.pause
 
         ($ '.save-button').click ->
-          console.log 'save-button'
           (do player.saveAsDataURL).done (url) ->
             $img = $ '<img>'
             $img.attr
