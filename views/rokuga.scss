@@ -20,17 +20,18 @@
     font-weight: bold;
     text-align: center;
     padding: 40px;
-}
 
-.drop-here.active {
-    background: #dceaf4;
+    &.active {
+        background: #dceaf4;
+    }
 }
 
 .player {
     display: none;
 }
 
-.sampling-preview, .player {
+.sampling-preview,
+.player {
     margin: 20px;
     text-align: center;
 }
@@ -55,10 +56,10 @@
         background-position: center;
         background-repeat: no-repeat;
         background-color: #333;
-    }
 
-    .frame-item.current {
-        opacity: 0.7;
+        &.current {
+            opacity: 0.7;
+        }
     }
 }
 
