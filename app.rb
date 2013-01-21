@@ -19,8 +19,6 @@ class RokugaApp < Sinatra::Base
       DataURL.parse url
     }
 
-    p "#{frames.length} frames, wait = #{wait}"
-
     animation = Animation.new
     animation.set_delay [(wait/10).to_i, 1].max
 
