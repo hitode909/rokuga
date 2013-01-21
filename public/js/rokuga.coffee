@@ -214,7 +214,7 @@ $ ->
       $video.remove()
 
     $video.one 'canplay', ->
-      (RecordVideoAsURLList ($video.get 0), 8).done (image_urls) ->
+      (RecordVideoAsURLList ($video.get 0), 12).done (image_urls) ->
         do $('.controllers').show
         do $video.remove
         frames = []
@@ -241,7 +241,9 @@ $ ->
             $img = $ '<img>'
             $img.attr
               src: url
-            ($ '.gallery').append $img
+            $gallery = $ '.gallery'
+            do $gallery.show
+            $gallery.append $img
 
             $img.on 'click', ->
               window.open $img.attr 'src'

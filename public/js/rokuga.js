@@ -244,7 +244,7 @@ $(function() {
       return $video.remove();
     });
     return $video.one('canplay', function() {
-      return (RecordVideoAsURLList($video.get(0), 8)).done(function(image_urls) {
+      return (RecordVideoAsURLList($video.get(0), 12)).done(function(image_urls) {
         var frame, frames, last_url, player, url, _i, _len;
         $('.controllers').show();
         $video.remove();
@@ -272,12 +272,14 @@ $(function() {
         });
         return ($('.save-button')).click(function() {
           return (player.saveAsDataURL()).done(function(url) {
-            var $img;
+            var $gallery, $img;
             $img = $('<img>');
             $img.attr({
               src: url
             });
-            ($('.gallery')).append($img);
+            $gallery = $('.gallery');
+            $gallery.show();
+            $gallery.append($img);
             return $img.on('click', function() {
               return window.open($img.attr('src'));
             });
