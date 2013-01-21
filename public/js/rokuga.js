@@ -101,16 +101,14 @@ Frame = (function() {
     this.url = url;
   }
   Frame.prototype.createElement = function() {
-    var $img, $label;
+    var $label;
     this.$element = ($('<div>')).addClass('frame-item');
     $label = $('<label>');
     this.$element.append($label);
     $label.append($('<input type=checkbox checked>'));
-    $img = $('<img>');
-    $img.attr({
-      src: this.url
+    this.$element.css({
+      'background-image': "url('" + this.url + "')"
     });
-    $label.append($img);
     return this.$element;
   };
   Frame.prototype.isActive = function() {
@@ -149,7 +147,6 @@ FramesPlayer = (function() {
         }
         try_count++;
       }
-      console.log(this.currentFrame);
       this.$screen.attr({
         src: frame.getURL()
       });

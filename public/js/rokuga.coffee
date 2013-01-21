@@ -94,10 +94,9 @@ class Frame
     $label = $ '<label>'
     @$element.append $label
     $label.append $ '<input type=checkbox checked>'
-    $img = $ '<img>'
-    $img.attr
-      src: @url
-    $label.append $img
+
+    @$element.css
+      'background-image': "url('#{@url}')"
     @$element
 
   isActive: ->
@@ -129,7 +128,6 @@ class FramesPlayer
         break if frame.isActive()
         try_count++
 
-      console.log @currentFrame
       @$screen.attr
         src: do frame.getURL
 
