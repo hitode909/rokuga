@@ -227,7 +227,7 @@ $ ->
           ($ '.frames').append do frame.createElement
           last_url = url
 
-        do $ '.player'.show
+        do ($ '.player').show
         player = new FramesPlayer
           $screen: $ '.player img'
           frames: frames

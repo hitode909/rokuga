@@ -261,7 +261,7 @@ $(function() {
           ($('.frames')).append(frame.createElement());
           last_url = url;
         }
-        $('.player'.show)();
+        ($('.player')).show();
         player = new FramesPlayer({
           $screen: $('.player img'),
           frames: frames
