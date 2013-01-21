@@ -139,7 +139,7 @@ class FramesPlayer
     clearInterval @play_timer
     @play_timer = null
 
-  play_pause: ->
+  pause: ->
     if @play_timer
       do @stop
     else
@@ -147,6 +147,12 @@ class FramesPlayer
 
   getWait: ->
     + ($ '.wait-ms').val()
+
+  saveAsDataURL: ->
+    saved = do $.Deferred
+    saved.resolve 'http://htn.to/motemen'
+
+    do saved.promise
 
 $ ->
   file_handler = new FileHandler
@@ -192,8 +198,14 @@ $ ->
           frames: frames
         do player.play
 
-        ($ '.play-button').click ->
-          do player.play
+        ($ '.pause-button').click ->
+          do player.pause
 
-        ($ '.stop-button').click ->
-          do player.stop
+        ($ '.save-button').click ->
+          console.log 'save-button'
+          (do player.saveAsDataURL).done (url) ->
+            console.log url
+            $img = $ '<img>'
+            $img.attr
+              src: url
+            ($ '.gallery').append $img

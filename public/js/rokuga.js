@@ -158,7 +158,7 @@ FramesPlayer = (function() {
     clearInterval(this.play_timer);
     return this.play_timer = null;
   };
-  FramesPlayer.prototype.play_pause = function() {
+  FramesPlayer.prototype.pause = function() {
     if (this.play_timer) {
       return this.stop();
     } else {
@@ -167,6 +167,12 @@ FramesPlayer = (function() {
   };
   FramesPlayer.prototype.getWait = function() {
     return +($('.wait-ms')).val();
+  };
+  FramesPlayer.prototype.saveAsDataURL = function() {
+    var saved;
+    saved = $.Deferred();
+    saved.resolve('http://htn.to/motemen');
+    return saved.promise();
   };
   return FramesPlayer;
 })();
@@ -220,11 +226,20 @@ $(function() {
           frames: frames
         });
         player.play();
-        ($('.play-button')).click(function() {
-          return player.play();
+        ($('.pause-button')).click(function() {
+          return player.pause();
         });
-        return ($('.stop-button')).click(function() {
-          return player.stop();
+        return ($('.save-button')).click(function() {
+          console.log('save-button');
+          return (player.saveAsDataURL()).done(function(url) {
+            var $img;
+            console.log(url);
+            $img = $('<img>');
+            $img.attr({
+              src: url
+            });
+            return ($('.gallery')).append($img);
+          });
         });
       });
     });
