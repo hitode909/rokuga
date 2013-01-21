@@ -1,3 +1,11 @@
+addTaskGuard = (guard) ->
+  $indicator = $ '.indicator'
+
+  do $indicator.show
+
+  guard.always ->
+    do $indicator.hide
+
 class FileHandler
   constructor: (args) ->
     @$container = args.$container
@@ -30,6 +38,7 @@ class FileHandler
 
   readFiles: (files) ->
     read_all = do $.Deferred
+    addTaskGuard read_all
     contents = []
     i = 0
 
@@ -71,6 +80,8 @@ RecordVideoAsURLList = (video, fps) ->
   images = []
 
   reached_end = do $.Deferred
+
+  addTaskGuard reached_end
 
   do video.play
 
@@ -164,6 +175,8 @@ class FramesPlayer
   saveAsDataURL: ->
     saved = do $.Deferred
 
+    addTaskGuard saved
+
     activeURLs = (do frame.getURL for frame in @frames when frame.isActive())
 
     $.ajax
@@ -214,6 +227,7 @@ $ ->
           ($ '.frames').append do frame.createElement
           last_url = url
 
+        do $ '.player'.show
         player = new FramesPlayer
           $screen: $ '.player img'
           frames: frames

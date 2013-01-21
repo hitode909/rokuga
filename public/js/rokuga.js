@@ -1,5 +1,13 @@
-var FileHandler, Frame, FramesPlayer, RecordVideoAsURLList;
+var FileHandler, Frame, FramesPlayer, RecordVideoAsURLList, addTaskGuard;
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+addTaskGuard = function(guard) {
+  var $indicator;
+  $indicator = $('.indicator');
+  $indicator.show();
+  return guard.always(function() {
+    return $indicator.hide();
+  });
+};
 FileHandler = (function() {
   function FileHandler(args) {
     this.$container = args.$container;
@@ -38,6 +46,7 @@ FileHandler = (function() {
   FileHandler.prototype.readFiles = function(files) {
     var contents, i, read_all, role;
     read_all = $.Deferred();
+    addTaskGuard(read_all);
     contents = [];
     i = 0;
     role = __bind(function() {
@@ -85,6 +94,7 @@ RecordVideoAsURLList = function(video, fps) {
   context = canvas.getContext('2d');
   images = [];
   reached_end = $.Deferred();
+  addTaskGuard(reached_end);
   video.play();
   shot_timer = setInterval(function() {
     context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
@@ -181,6 +191,7 @@ FramesPlayer = (function() {
   FramesPlayer.prototype.saveAsDataURL = function() {
     var activeURLs, frame, saved;
     saved = $.Deferred();
+    addTaskGuard(saved);
     activeURLs = (function() {
       var _i, _len, _ref, _results;
       _ref = this.frames;
@@ -250,6 +261,7 @@ $(function() {
           ($('.frames')).append(frame.createElement());
           last_url = url;
         }
+        $('.player'.show)();
         player = new FramesPlayer({
           $screen: $('.player img'),
           frames: frames
