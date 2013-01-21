@@ -245,7 +245,7 @@ $(function() {
       return $video.remove();
     });
     return $video.one('canplay', function() {
-      return (Rokuga.recordVideoAsURLList($video.get(0), 12)).done(function(image_urls) {
+      return (Rokuga.recordVideoAsURLList($video.get(0), 8)).done(function(image_urls) {
         var frame, frames, last_url, player, url, _i, _len;
         $('.controllers').show();
         $video.remove();

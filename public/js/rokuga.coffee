@@ -216,7 +216,7 @@ $ ->
       $video.remove()
 
     $video.one 'canplay', ->
-      (Rokuga.recordVideoAsURLList ($video.get 0), 12).done (image_urls) ->
+      (Rokuga.recordVideoAsURLList ($video.get 0), 8).done (image_urls) ->
         do $('.controllers').show
         do $video.remove
         frames = []
