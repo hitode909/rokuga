@@ -1,6 +1,7 @@
-var FileHandler, Frame, FramesPlayer, RecordVideoAsURLList, addTaskGuard;
+var Rokuga;
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-addTaskGuard = function(guard) {
+Rokuga = {};
+Rokuga.addTaskGuard = function(guard) {
   var $indicator;
   $indicator = $('.indicator');
   $indicator.show();
@@ -8,7 +9,7 @@ addTaskGuard = function(guard) {
     return $indicator.hide();
   });
 };
-FileHandler = (function() {
+Rokuga.FileHandler = (function() {
   function FileHandler(args) {
     this.$container = args.$container;
     if (!this.$container) {
@@ -46,7 +47,7 @@ FileHandler = (function() {
   FileHandler.prototype.readFiles = function(files) {
     var contents, i, read_all, role;
     read_all = $.Deferred();
-    addTaskGuard(read_all);
+    Rokuga.addTaskGuard(read_all);
     contents = [];
     i = 0;
     role = __bind(function() {
@@ -80,7 +81,7 @@ FileHandler = (function() {
   };
   return FileHandler;
 })();
-RecordVideoAsURLList = function(video, fps) {
+Rokuga.recordVideoAsURLList = function(video, fps) {
   var canvas, context, images, reached_end, shot_timer;
   canvas = (function() {
     var $element;
@@ -94,7 +95,7 @@ RecordVideoAsURLList = function(video, fps) {
   context = canvas.getContext('2d');
   images = [];
   reached_end = $.Deferred();
-  addTaskGuard(reached_end);
+  Rokuga.addTaskGuard(reached_end);
   video.play();
   shot_timer = setInterval(function() {
     context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
@@ -106,7 +107,7 @@ RecordVideoAsURLList = function(video, fps) {
   });
   return reached_end.promise();
 };
-Frame = (function() {
+Rokuga.Frame = (function() {
   function Frame(url) {
     this.url = url;
   }
@@ -132,7 +133,7 @@ Frame = (function() {
   };
   return Frame;
 })();
-FramesPlayer = (function() {
+Rokuga.FramesPlayer = (function() {
   function FramesPlayer(args) {
     this.$screen = args.$screen;
     this.frames = args.frames;
@@ -191,7 +192,7 @@ FramesPlayer = (function() {
   FramesPlayer.prototype.saveAsDataURL = function() {
     var activeURLs, frame, saved;
     saved = $.Deferred();
-    addTaskGuard(saved);
+    Rokuga.addTaskGuard(saved);
     activeURLs = (function() {
       var _i, _len, _ref, _results;
       _ref = this.frames;
@@ -223,7 +224,7 @@ FramesPlayer = (function() {
 })();
 $(function() {
   var file_handler;
-  file_handler = new FileHandler({
+  file_handler = new Rokuga.FileHandler({
     $container: $('.drop-here'),
     type: /^video\/$/
   });
@@ -244,7 +245,7 @@ $(function() {
       return $video.remove();
     });
     return $video.one('canplay', function() {
-      return (RecordVideoAsURLList($video.get(0), 12)).done(function(image_urls) {
+      return (Rokuga.recordVideoAsURLList($video.get(0), 12)).done(function(image_urls) {
         var frame, frames, last_url, player, url, _i, _len;
         $('.controllers').show();
         $video.remove();
@@ -255,14 +256,14 @@ $(function() {
           if (url === last_url) {
             continue;
           }
-          frame = new Frame(url);
+          frame = new Rokuga.Frame(url);
           window.frame = frame;
           frames.push(frame);
           ($('.frames')).append(frame.createElement());
           last_url = url;
         }
         ($('.player')).show();
-        player = new FramesPlayer({
+        player = new Rokuga.FramesPlayer({
           $screen: $('.player img'),
           frames: frames
         });

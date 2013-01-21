@@ -1,4 +1,6 @@
-addTaskGuard = (guard) ->
+Rokuga = {}
+
+Rokuga.addTaskGuard = (guard) ->
   $indicator = $ '.indicator'
 
   do $indicator.show
@@ -6,7 +8,7 @@ addTaskGuard = (guard) ->
   guard.always ->
     do $indicator.hide
 
-class FileHandler
+class Rokuga.FileHandler
   constructor: (args) ->
     @$container = args.$container
     throw "$container required" unless @$container
@@ -38,7 +40,7 @@ class FileHandler
 
   readFiles: (files) ->
     read_all = do $.Deferred
-    addTaskGuard read_all
+    Rokuga.addTaskGuard read_all
     contents = []
     i = 0
 
@@ -67,7 +69,7 @@ class FileHandler
 
     do read.promise
 
-RecordVideoAsURLList = (video, fps) ->
+Rokuga.recordVideoAsURLList = (video, fps) ->
   # video must be playable
   canvas = do ->
     $element = $ '<canvas>'
@@ -81,7 +83,7 @@ RecordVideoAsURLList = (video, fps) ->
 
   reached_end = do $.Deferred
 
-  addTaskGuard reached_end
+  Rokuga.addTaskGuard reached_end
 
   do video.play
 
@@ -96,7 +98,7 @@ RecordVideoAsURLList = (video, fps) ->
 
   do reached_end.promise
 
-class Frame
+class Rokuga.Frame
   constructor: (url) ->
     @url = url
 
@@ -119,7 +121,7 @@ class Frame
   getURL: ->
     @url
 
-class FramesPlayer
+class Rokuga.FramesPlayer
   constructor: (args) ->
     @$screen = args.$screen
     @frames = args.frames
@@ -175,7 +177,7 @@ class FramesPlayer
   saveAsDataURL: ->
     saved = do $.Deferred
 
-    addTaskGuard saved
+    Rokuga.addTaskGuard saved
 
     activeURLs = (do frame.getURL for frame in @frames when frame.isActive())
 
@@ -194,7 +196,7 @@ class FramesPlayer
     do saved.promise
 
 $ ->
-  file_handler = new FileHandler
+  file_handler = new Rokuga.FileHandler
     $container: $('.drop-here')
     type: /^video\/$/
   $(file_handler)
@@ -214,21 +216,21 @@ $ ->
       $video.remove()
 
     $video.one 'canplay', ->
-      (RecordVideoAsURLList ($video.get 0), 12).done (image_urls) ->
+      (Rokuga.recordVideoAsURLList ($video.get 0), 12).done (image_urls) ->
         do $('.controllers').show
         do $video.remove
         frames = []
         last_url = null
         for url in image_urls
           continue if url == last_url
-          frame = new Frame(url)
+          frame = new Rokuga.Frame(url)
           window.frame = frame
           frames.push frame
           ($ '.frames').append do frame.createElement
           last_url = url
 
         do ($ '.player').show
-        player = new FramesPlayer
+        player = new Rokuga.FramesPlayer
           $screen: $ '.player img'
           frames: frames
         do player.play
