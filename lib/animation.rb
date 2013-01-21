@@ -15,10 +15,11 @@ class Animation
     @delay = delay
   end
 
-  def write
+  def to_blob
     to_write = @out.optimize_layers(Magick::OptimizeTransLayer).deconstruct
     to_write.delay = @delay if @delay
     to_write.write("out.gif")
+    open("out.gif").read
   end
 end
 

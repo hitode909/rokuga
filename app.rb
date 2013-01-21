@@ -28,9 +28,7 @@ class RokugaApp < Sinatra::Base
       animation.add_frame url.body
     }
 
-    animation.write
-
-    "http://htn.to/motemen"
+    DataURL.format('image/gif', animation.to_blob)
   end
 
   get "/css/rokuga.css" do

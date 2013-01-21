@@ -9,6 +9,11 @@ class DataURL
     self.new matched[:content_type], !!matched[:is_base64], matched[:body]
   end
 
+  def self.format(content_type, body)
+    encoded_body = Base64.encode64 body
+    "data:#{content_type};base64,#{encoded_body}"
+  end
+
   def initialize(content_type, is_base64, body)
     @content_type = content_type
     @is_base64 = is_base64
