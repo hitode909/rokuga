@@ -98,6 +98,17 @@ Rokuga.recordVideoAsURLList = (video, fps) ->
 
   do reached_end.promise
 
+Rokuga.createUniqueFrames = (image_urls) ->
+  frames = []
+  last_url = null
+  for url in image_urls
+    continue if url == last_url
+    frame = new Rokuga.Frame(url)
+    window.frame = frame
+    frames.push frame
+
+  frames
+
 class Rokuga.Frame
   constructor: (url) ->
     @url = url
@@ -195,6 +206,22 @@ class Rokuga.FramesPlayer
 
     do saved.promise
 
+Rokuga.saveToGallery = (url) ->
+  $anchor = $ '<a>'
+  $anchor.attr
+    href: url
+    target: '_blank'
+
+  $img = $ '<img>'
+  $img.attr
+    src: url
+
+  $anchor.append $img
+
+  $gallery = $ '.gallery'
+  do $gallery.show
+  $gallery.append $anchor
+
 $ ->
   file_handler = new Rokuga.FileHandler
     $container: $('.drop-here')
@@ -219,15 +246,10 @@ $ ->
       (Rokuga.recordVideoAsURLList ($video.get 0), 8).done (image_urls) ->
         do $('.controllers').show
         do $video.remove
-        frames = []
-        last_url = null
-        for url in image_urls
-          continue if url == last_url
-          frame = new Rokuga.Frame(url)
-          window.frame = frame
-          frames.push frame
+        frames = Rokuga.createUniqueFrames image_urls
+
+        for frame in frames
           ($ '.frames').append do frame.createElement
-          last_url = url
 
         do ($ '.player').show
         player = new Rokuga.FramesPlayer
@@ -240,12 +262,4 @@ $ ->
 
         ($ '.save-button').click ->
           (do player.saveAsDataURL).done (url) ->
-            $img = $ '<img>'
-            $img.attr
-              src: url
-            $gallery = $ '.gallery'
-            do $gallery.show
-            $gallery.append $img
-
-            $img.on 'click', ->
-              window.open $img.attr 'src'
+            Rokuga.saveToGallery url

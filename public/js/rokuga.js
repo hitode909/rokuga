@@ -107,6 +107,21 @@ Rokuga.recordVideoAsURLList = function(video, fps) {
   });
   return reached_end.promise();
 };
+Rokuga.createUniqueFrames = function(image_urls) {
+  var frame, frames, last_url, url, _i, _len;
+  frames = [];
+  last_url = null;
+  for (_i = 0, _len = image_urls.length; _i < _len; _i++) {
+    url = image_urls[_i];
+    if (url === last_url) {
+      continue;
+    }
+    frame = new Rokuga.Frame(url);
+    window.frame = frame;
+    frames.push(frame);
+  }
+  return frames;
+};
 Rokuga.Frame = (function() {
   function Frame(url) {
     this.url = url;
@@ -222,6 +237,22 @@ Rokuga.FramesPlayer = (function() {
   };
   return FramesPlayer;
 })();
+Rokuga.saveToGallery = function(url) {
+  var $anchor, $gallery, $img;
+  $anchor = $('<a>');
+  $anchor.attr({
+    href: url,
+    target: '_blank'
+  });
+  $img = $('<img>');
+  $img.attr({
+    src: url
+  });
+  $anchor.append($img);
+  $gallery = $('.gallery');
+  $gallery.show();
+  return $gallery.append($anchor);
+};
 $(function() {
   var file_handler;
   file_handler = new Rokuga.FileHandler({
@@ -246,21 +277,13 @@ $(function() {
     });
     return $video.one('canplay', function() {
       return (Rokuga.recordVideoAsURLList($video.get(0), 8)).done(function(image_urls) {
-        var frame, frames, last_url, player, url, _i, _len;
+        var frame, frames, player, _i, _len;
         $('.controllers').show();
         $video.remove();
-        frames = [];
-        last_url = null;
-        for (_i = 0, _len = image_urls.length; _i < _len; _i++) {
-          url = image_urls[_i];
-          if (url === last_url) {
-            continue;
-          }
-          frame = new Rokuga.Frame(url);
-          window.frame = frame;
-          frames.push(frame);
+        frames = Rokuga.createUniqueFrames(image_urls);
+        for (_i = 0, _len = frames.length; _i < _len; _i++) {
+          frame = frames[_i];
           ($('.frames')).append(frame.createElement());
-          last_url = url;
         }
         ($('.player')).show();
         player = new Rokuga.FramesPlayer({
@@ -273,17 +296,7 @@ $(function() {
         });
         return ($('.save-button')).click(function() {
           return (player.saveAsDataURL()).done(function(url) {
-            var $gallery, $img;
-            $img = $('<img>');
-            $img.attr({
-              src: url
-            });
-            $gallery = $('.gallery');
-            $gallery.show();
-            $gallery.append($img);
-            return $img.on('click', function() {
-              return window.open($img.attr('src'));
-            });
+            return Rokuga.saveToGallery(url);
           });
         });
       });
