@@ -265,6 +265,7 @@ $(function() {
     return $('.drop-here').removeClass('active');
   }).on('data_url_prepared', function(event, urls) {
     var $video, content;
+    $('.drop-here').removeClass('active');
     $('.drop-here').remove();
     content = urls[0];
     $video = $('<video>');
@@ -297,9 +298,13 @@ $(function() {
         return ($('.save-button')).click(function() {
           return (player.saveAsDataURL()).done(function(url) {
             return Rokuga.saveToGallery(url);
+          }).fail(function() {
+            return alert("Failed to save animation gif.");
           });
         });
       });
+    }).one('error', function(error) {
+      return alert("Failed to play the video.");
     });
   });
 });

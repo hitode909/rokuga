@@ -232,6 +232,7 @@ $ ->
   .on 'leave', ->
     $('.drop-here').removeClass 'active'
   .on 'data_url_prepared', (event, urls) ->
+    $('.drop-here').removeClass 'active'
     do $('.drop-here').remove
     content = urls[0]
     $video = $ '<video>'
@@ -263,3 +264,8 @@ $ ->
         ($ '.save-button').click ->
           (do player.saveAsDataURL).done (url) ->
             Rokuga.saveToGallery url
+          .fail ->
+            alert "Failed to save animation gif."
+
+    .one 'error', (error) ->
+      alert "Failed to play the video."
