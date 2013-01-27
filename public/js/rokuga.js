@@ -81,6 +81,21 @@ Rokuga.FileHandler = (function() {
   };
   return FileHandler;
 })();
+Rokuga.createVideoAndWaitForLoad = function(url) {
+  var $video, can_play;
+  can_play = $.Deferred();
+  $video = $('<video>');
+  $video.attr({
+    src: url
+  });
+  $video.one('canplay', function() {
+    return can_play.done($video);
+  });
+  $video.one('error', function(error) {
+    return can_play.fail(error);
+  });
+  return can_play.promise();
+};
 Rokuga.recordVideoAsURLList = function(video, fps) {
   var canvas, context, images, reached_end, shot_timer;
   canvas = (function() {
@@ -264,29 +279,20 @@ $(function() {
   }).on('leave', function() {
     return $('.drop-here').removeClass('active');
   }).on('data_url_prepared', function(event, urls) {
-    var $video, content;
     $('.drop-here').removeClass('active');
     $('.drop-here').remove();
-    content = urls[0];
-    $video = $('<video>');
-    $video.attr({
-      src: content
-    });
-    ($('.sampling-preview')).append($video);
-    $video.one('ended', function() {
-      return $video.remove();
-    });
-    return $video.one('canplay', function() {
+    return (Rokuga.createVideoAndWaitForLoad(urls[0])).done(function($video) {
+      ($('.sampling-preview')).append($video);
       return (Rokuga.recordVideoAsURLList($video.get(0), 8)).done(function(image_urls) {
-        var frame, frames, player, _i, _len;
-        $('.controllers').show();
+        var frame, player, _i, _len, _ref;
         $video.remove();
-        frames = Rokuga.createUniqueFrames(image_urls);
-        for (_i = 0, _len = frames.length; _i < _len; _i++) {
-          frame = frames[_i];
+        $('.controllers').show();
+        ($('.player')).show();
+        _ref = Rokuga.createUniqueFrames(image_urls);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          frame = _ref[_i];
           ($('.frames')).append(frame.createElement());
         }
-        ($('.player')).show();
         player = new Rokuga.FramesPlayer({
           $screen: $('.player img'),
           frames: frames
@@ -303,7 +309,7 @@ $(function() {
           });
         });
       });
-    }).one('error', function(error) {
+    }).fail(function() {
       return alert("Failed to play the video.");
     });
   });

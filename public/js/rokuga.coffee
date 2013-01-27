@@ -69,6 +69,21 @@ class Rokuga.FileHandler
 
     do read.promise
 
+Rokuga.createVideoAndWaitForLoad = (url) ->
+  can_play = do $.Deferred
+
+  $video = $ '<video>'
+  $video.attr
+    src: url
+
+  $video.one 'canplay', ->
+    can_play.done $video
+
+  $video.one 'error', (error) ->
+    can_play.fail error
+
+  do can_play.promise
+
 Rokuga.recordVideoAsURLList = (video, fps) ->
   # video must be playable
   canvas = do ->
@@ -234,25 +249,18 @@ $ ->
   .on 'data_url_prepared', (event, urls) ->
     $('.drop-here').removeClass 'active'
     do $('.drop-here').remove
-    content = urls[0]
-    $video = $ '<video>'
-    $video.attr
-      src: content
 
-    ($ '.sampling-preview').append $video
-    $video.one 'ended', ->
-      $video.remove()
+    (Rokuga.createVideoAndWaitForLoad urls[0]).done ($video) ->
+      ($ '.sampling-preview').append $video
 
-    $video.one 'canplay', ->
       (Rokuga.recordVideoAsURLList ($video.get 0), 8).done (image_urls) ->
-        do $('.controllers').show
         do $video.remove
-        frames = Rokuga.createUniqueFrames image_urls
+        do $('.controllers').show
+        do ($ '.player').show
 
-        for frame in frames
+        for frame in Rokuga.createUniqueFrames image_urls
           ($ '.frames').append do frame.createElement
 
-        do ($ '.player').show
         player = new Rokuga.FramesPlayer
           $screen: $ '.player img'
           frames: frames
@@ -267,5 +275,5 @@ $ ->
           .fail ->
             alert "Failed to save animation gif."
 
-    .one 'error', (error) ->
+    .fail ->
       alert "Failed to play the video."
