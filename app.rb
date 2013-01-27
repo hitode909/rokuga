@@ -4,7 +4,7 @@ require './lib/animation'
 class RokugaApp < Sinatra::Base
 
   get "/" do
-    send_file File.join('public', 'index.html')
+    send_file File.join('views', 'index.html')
   end
 
   post "/save" do
