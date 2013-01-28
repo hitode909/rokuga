@@ -169,6 +169,7 @@ class Rokuga.FramesPlayer
       while try_count < @frames.length
         @currentFrame++
         @currentFrame = 0 if @currentFrame >= @frames.length
+        @currentFrame = @frames.length-1 if @currentFrame < 0
         frame = @frames[@currentFrame]
         break if frame.isActive()
         try_count++
