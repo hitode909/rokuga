@@ -5,7 +5,6 @@
     <script src="/js/rokuga.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link href="/css/rokuga.css" rel="stylesheet" media="screen">
     <title>
@@ -26,24 +25,29 @@
       <div class="player">
         <img/>
       </div>
-      <div class="controllers">
-        <button class="pause-button btn">
-          <i class="icon-pause"></i>
-        </button>
-        <button class="save-button btn">
-          <i class="icon-download-alt"></i>
-        </button>
-
-        <span class="btn-group play-type-control">
-          <button class="forward-button btn btn-primary"><i class="icon-caret-right"></i></button>
-          <button class="reverse-button btn"><i class=" icon-caret-left"></i></button>
-          <button class="come-and-go-button btn"><i class=" icon-exchange"></i></button>
-          <button class="random-button btn"><i class="icon-random"></i></button>
-        </span>
-
-        <div class="delay-controller">
-          <input class="delay" type="range" min="1" max="100" value="10" step="1" />
+      <div class="controllers row">
+        <div class="span2">
+          <span class="btn-group play-type-control">
+            <button class="forward-button btn btn-primary"><i class="icon-caret-right"></i></button>
+            <button class="reverse-button btn"><i class=" icon-caret-left"></i></button>
+            <button class="come-and-go-button btn"><i class=" icon-exchange"></i></button>
+            <button class="random-button btn"><i class="icon-random"></i></button>
+          </span>
         </div>
+
+        <div class="span9">
+          <label class="speed">
+            <i class="icon-fighter-jet"></i>
+            <input class="delay" type="range" min="1" max="100" value="10" step="1" />
+          </label>
+        </div>
+
+        <div class="span1">
+          <button class="save-button btn">
+            <i class="icon-download-alt"></i>
+          </button>
+        </div>
+
       </div>
       <div class="frames">
       </div>

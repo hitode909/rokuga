@@ -68,13 +68,15 @@ h1 {
     margin-bottom: 10px;
     display: none;
 
-    .delay-controller {
-        margin-top: 20px;
-        margin-bottom: 20px;
+    label.speed {
+        margin-left: 10px;
+        marign-right: 10px;
+        display: inline;
+    }
 
-        .delay {
-            width: 100%;
-        }
+    .delay {
+        width: 90%;
+        display: inline;
     }
 }
 

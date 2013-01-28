@@ -281,9 +281,6 @@ $ ->
           frames: frames
         do player.play
 
-        ($ '.pause-button').click ->
-          do player.pause
-
         ($ '.save-button').click ->
           (do player.saveAsDataURL).done (url) ->
             Rokuga.saveToGallery url
