@@ -82,9 +82,13 @@ h1 {
 }
 
 .controllers {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: none;
+
+    .speed-container {
+        text-align: center;
+    }
 
     label.speed {
         margin-left: 10px;
@@ -99,7 +103,7 @@ h1 {
 }
 
 .gallery {
-    margin-top: 20px;
+    margin-top: 80px;
 
      text-align: center;
 
