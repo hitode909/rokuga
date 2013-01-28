@@ -169,7 +169,6 @@ class Rokuga.FramesPlayer
       frame = null
       while try_count < @frames.length
         @currentFrame = @getNextFrame @currentFrame
-        console.log @currentFrame
         @currentFrame = 0 if @currentFrame >= @frames.length
         @currentFrame = @frames.length-1 if @currentFrame < 0
         frame = @frames[@currentFrame]
@@ -208,7 +207,7 @@ class Rokuga.FramesPlayer
 
     Rokuga.addTaskGuard saved
 
-    activeURLs = (do frame.getURL for frame in @frames when frame.isActive())
+    activeURLs = do @createFramesURL
 
     $.ajax
       type: 'POST'
@@ -225,23 +224,70 @@ class Rokuga.FramesPlayer
     do saved.promise
 
   setForwardMode: ->
+    # TODO: filter active frames first
     @getNextFrame = (frame) =>
       frame + 1
+
+    @createFramesURL = ->
+      i = 0
+      actives = _.filter @frames, (frame) -> do frame.isActive
+      frames = []
+      while i < actives.length
+        frame = actives[i]
+        frames.push frame
+        i++
+
+      do frame.getURL for frame in frames
 
   setReverseMode: ->
     @getNextFrame = (frame) =>
       frame - 1
 
+    @createFramesURL = ->
+      actives = _.filter @frames, (frame) -> do frame.isActive
+      i = actives.length-1
+      frames = []
+      while i >= 0
+        frame = actives[i]
+        frames.push frame
+        i--
+
+      do frame.getURL for frame in frames
+
   setComeAndGoMode: ->
     diff = 1
     @getNextFrame = (frame) =>
-      diff *= -1 if frame == @frames.length-1
+      actives = _.filter @frames, (frame) -> do frame.isActive
+      diff *= -1 if frame == actives.length-1
       diff *= -1 if frame == 0
-      nextFrame = frame + diff
+      frame + diff
+
+    @createFramesURL = ->
+      actives = _.filter @frames, (frame) -> do frame.isActive
+      i = 0
+      frames = []
+
+      while i < actives.length
+        frame = actives[i]
+        frames.push frame if do frame.isActive
+        i++
+
+      i = actives.length-2
+      while i > 0
+        frame = actives[i]
+        frames.push frame if do frame.isActive
+        i--
+
+      do frame.getURL for frame in frames
 
   setRandomMode: ->
     @getNextFrame = (frame) =>
       Math.floor (do Math.random * @frames.length)
+
+    @createFramesURL = ->
+      actives = _.filter @frames, (frame) -> do frame.isActive
+      shuffled = _.shuffle actives
+      do frame.getURL for frame in shuffled
 
 Rokuga.saveToGallery = (url) ->
   $anchor = $ '<a>'
