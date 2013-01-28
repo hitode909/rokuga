@@ -303,11 +303,13 @@ Rokuga.saveToGallery = (url) ->
   $img.attr
     src: url
 
-  $anchor.append $img
+  $anchor.prepend $img
 
   $gallery = $ '.gallery'
   do $gallery.show
-  $gallery.append $anchor
+  $gallery.prepend $anchor
+  $img.one 'load', ->
+    window.scrollTo 0, (do $anchor.offset).top
 
 $ ->
   file_handler = new Rokuga.FileHandler
