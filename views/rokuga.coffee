@@ -152,6 +152,7 @@ class Rokuga.FramesPlayer
     @$screen = args.$screen
     @frames = args.frames
     @currentFrame = 0
+    do @setForwardMode
 
   play: ->
     return if @play_timer
@@ -167,7 +168,8 @@ class Rokuga.FramesPlayer
       try_count = 0
       frame = null
       while try_count < @frames.length
-        @currentFrame++
+        @currentFrame = @getNextFrame @currentFrame
+        console.log @currentFrame
         @currentFrame = 0 if @currentFrame >= @frames.length
         @currentFrame = @frames.length-1 if @currentFrame < 0
         frame = @frames[@currentFrame]
@@ -223,16 +225,23 @@ class Rokuga.FramesPlayer
     do saved.promise
 
   setForwardMode: ->
-    console.log 'forward'
+    @getNextFrame = (frame) =>
+      frame + 1
 
   setReverseMode: ->
-    console.log 'reverse'
+    @getNextFrame = (frame) =>
+      frame - 1
 
   setComeAndGoMode: ->
-    console.log '<->'
+    diff = 1
+    @getNextFrame = (frame) =>
+      diff *= -1 if frame == @frames.length-1
+      diff *= -1 if frame == 0
+      nextFrame = frame + diff
 
   setRandomMode: ->
-    console.log 'random'
+    @getNextFrame = (frame) =>
+      Math.floor (do Math.random * @frames.length)
 
 Rokuga.saveToGallery = (url) ->
   $anchor = $ '<a>'
