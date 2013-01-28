@@ -38,19 +38,37 @@ h1 {
 
 .frames {
 
+    label {
+        width: 100%;
+        height: 100%;
+    }
+
+    .top-line {
+        .padding {
+            cursor: default;
+        }
+    }
+
+    .padding {
+        cursor: pointer;
+    }
+
+    .control-item {
+        margin: 5px;
+        display: inline-block;
+        width: 102px;
+        height: 20px;
+        text-align: center;
+    }
+
     .frame-item {
         margin: 5px;
         border: 1px solid #ccc;
         display: inline-block;
-        width: 175px;
-        height: 175px;
+        width: 100px;
+        height: 100px;
         position: relative;
         text-align: center;
-
-        label {
-            width: 100%;
-            height: 100%;
-        }
 
         background-size: contain;
         background-position: center;

@@ -327,14 +327,58 @@ $ ->
         do $('.controllers').show
         do ($ '.player').show
 
+        do ->
+          $top_line = $ '<tr>'
+          $top_line.addClass 'top-line'
+          $padding = $ '<td>'
+          $padding.addClass 'padding'
+          $top_line.append $padding
+          for i in [0..7]
+            $control_item = $ '<td>'
+            $control_item.addClass 'control-item'
+            $checkbox = ($ '<input type="checkbox" checked>')
+            $checkbox.attr 'data-index', i
+            $checkbox.addClass 'row-controller'
+            $control_item.append ($ '<label>').append $checkbox
+            $top_line.append $control_item
+
+          ($ '.frames').append $top_line
+
         frames = Rokuga.createUniqueFrames image_urls
+        frame_index = 0
+        $frame_line = null
         for frame in frames
-          ($ '.frames').append do frame.createElement
+          if frame_index % 8 == 0
+            $frame_line = $('<tr>')
+            $frame_line.addClass 'frame-line'
+            $checkbox = ($ '<input type="checkbox" checked>')
+            $checkbox.addClass 'column-controller'
+            $padding = $ '<td>'
+            $padding.addClass 'padding'
+            $padding.append ($ '<label>').append $checkbox
+            $frame_line.append $padding
+            ($ '.frames').append $frame_line
+
+          $frame_line.append ($ '<td>').append do frame.createElement
+          frame_index++
 
         player = new Rokuga.FramesPlayer
           $screen: $ '.player img'
           frames: frames
         do player.play
+
+        ($ '.padding:has(input)').click (event) ->
+          return if ($ event.target).is 'input'
+          ($ this).find('input').click()
+
+        ($ '.column-controller').change ->
+          $checkbox = $ this
+          (($checkbox.parents '.frame-line').find '.frame-item input').prop 'checked', $checkbox.prop 'checked'
+
+        ($ '.row-controller').change ->
+          $checkbox = $ this
+          ($ '.frame-line').each ->
+            ($ this).find(".frame-item:eq(#{ $checkbox.attr 'data-index' }) input").prop 'checked', $checkbox.prop 'checked'
 
         ($ '.save-button').click ->
           (do player.saveAsDataURL).done (url) ->
