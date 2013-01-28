@@ -187,6 +187,9 @@ Rokuga.FramesPlayer = (function() {
         if (this.currentFrame >= this.frames.length) {
           this.currentFrame = 0;
         }
+        if (this.currentFrame < 0) {
+          this.currentFrame = this.frames.length - 1;
+        }
         frame = this.frames[this.currentFrame];
         if (frame.isActive()) {
           break;
@@ -250,6 +253,18 @@ Rokuga.FramesPlayer = (function() {
     });
     return saved.promise();
   };
+  FramesPlayer.prototype.setForwardMode = function() {
+    return console.log('forward');
+  };
+  FramesPlayer.prototype.setReverseMode = function() {
+    return console.log('reverse');
+  };
+  FramesPlayer.prototype.setComeAndGoMode = function() {
+    return console.log('<->');
+  };
+  FramesPlayer.prototype.setRandomMode = function() {
+    return console.log('<->');
+  };
   return FramesPlayer;
 })();
 Rokuga.saveToGallery = function(url) {
@@ -284,7 +299,7 @@ $(function() {
     return (Rokuga.createVideoAndWaitForLoad(urls[0])).done(function($video) {
       ($('.sampling-preview')).append($video);
       return (Rokuga.recordVideoAsURLList($video.get(0), 8)).done(function(image_urls) {
-        var frame, frames, player, _i, _len;
+        var frame, frames, player, setButtonClass, _i, _len;
         $video.remove();
         $('.controllers').show();
         ($('.player')).show();
@@ -301,12 +316,32 @@ $(function() {
         ($('.pause-button')).click(function() {
           return player.pause();
         });
-        return ($('.save-button')).click(function() {
+        ($('.save-button')).click(function() {
           return (player.saveAsDataURL()).done(function(url) {
             return Rokuga.saveToGallery(url);
           }).fail(function() {
             return alert("Failed to save animation gif.");
           });
+        });
+        setButtonClass = function(button) {
+          ($('.play-type-control .btn-primary')).removeClass('btn-primary');
+          return ($(button)).addClass('btn-primary');
+        };
+        ($('.forward-button')).click(function() {
+          setButtonClass(this);
+          return player.setForwardMode();
+        });
+        ($('.reverse-button')).click(function() {
+          setButtonClass(this);
+          return player.setReverseMode();
+        });
+        ($('.come-and-go-button')).click(function() {
+          setButtonClass(this);
+          return player.setComeAndGoMode();
+        });
+        return ($('.random-button')).click(function() {
+          setButtonClass(this);
+          return player.setRandomMode();
         });
       });
     }).fail(function() {

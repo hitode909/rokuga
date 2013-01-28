@@ -222,6 +222,18 @@ class Rokuga.FramesPlayer
 
     do saved.promise
 
+  setForwardMode: ->
+    console.log 'forward'
+
+  setReverseMode: ->
+    console.log 'reverse'
+
+  setComeAndGoMode: ->
+    console.log '<->'
+
+  setRandomMode: ->
+    console.log 'random'
+
 Rokuga.saveToGallery = (url) ->
   $anchor = $ '<a>'
   $anchor.attr
@@ -277,6 +289,26 @@ $ ->
             Rokuga.saveToGallery url
           .fail ->
             alert "Failed to save animation gif."
+
+        setButtonClass = (button) ->
+          ($ '.play-type-control .btn-primary').removeClass 'btn-primary'
+          ($ button).addClass 'btn-primary'
+
+        ($ '.forward-button').click ->
+          setButtonClass this
+          do player.setForwardMode
+
+        ($ '.reverse-button').click ->
+          setButtonClass this
+          do player.setReverseMode
+
+        ($ '.come-and-go-button').click ->
+          setButtonClass this
+          do player.setComeAndGoMode
+
+        ($ '.random-button').click ->
+          setButtonClass this
+          do player.setRandomMode
 
     .fail ->
       alert "Failed to play the video."
