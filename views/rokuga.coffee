@@ -166,19 +166,24 @@ class Rokuga.FramesPlayer
       (do @frames[@lastFrame].getElement).removeClass 'current'
 
       try_count = 0
-      frame = null
-      while try_count < @frames.length
+      while try_count < @frames.length * 2
+        frame = null
         @currentFrame = @getNextFrame @currentFrame
         @currentFrame = 0 if @currentFrame >= @frames.length
         @currentFrame = @frames.length-1 if @currentFrame < 0
         frame = @frames[@currentFrame]
-        break if frame.isActive()
+        if @currentFrame != @lastFrame and do frame.isActive
+          frame = @currentFrame
+          break
         try_count++
 
-      @$screen.attr
-        src: do frame.getURL
+      frameObject = @frames[if frame? then frame else @lastFrame]
 
-      (do frame.getElement).addClass 'current'
+      if frameObject
+        @$screen.attr
+          src: do frameObject.getURL
+
+        (do frameObject.getElement).addClass 'current'
 
       @lastFrame = @currentFrame
 
@@ -257,8 +262,7 @@ class Rokuga.FramesPlayer
   setComeAndGoMode: ->
     diff = 1
     @getNextFrame = (frame) =>
-      actives = _.filter @frames, (frame) -> do frame.isActive
-      diff *= -1 if frame == actives.length-1
+      diff *= -1 if frame == @frames.length - 1
       diff *= -1 if frame == 0
       frame + diff
 
