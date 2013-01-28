@@ -33,4 +33,8 @@ class RokugaApp < Sinatra::Base
     scss :rokuga
   end
 
+  get '/js/rokuga.js' do
+    coffee :rokuga
+  end
+
 end
