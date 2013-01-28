@@ -89,7 +89,7 @@ Rokuga.createVideoAndWaitForLoad = function(url) {
     src: url
   });
   $video.one('canplay', function() {
-    return can_play.done($video);
+    return can_play.resolve($video);
   });
   $video.one('error', function(error) {
     return can_play.fail(error);
@@ -284,13 +284,13 @@ $(function() {
     return (Rokuga.createVideoAndWaitForLoad(urls[0])).done(function($video) {
       ($('.sampling-preview')).append($video);
       return (Rokuga.recordVideoAsURLList($video.get(0), 8)).done(function(image_urls) {
-        var frame, player, _i, _len, _ref;
+        var frame, frames, player, _i, _len;
         $video.remove();
         $('.controllers').show();
         ($('.player')).show();
-        _ref = Rokuga.createUniqueFrames(image_urls);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          frame = _ref[_i];
+        frames = Rokuga.createUniqueFrames(image_urls);
+        for (_i = 0, _len = frames.length; _i < _len; _i++) {
+          frame = frames[_i];
           ($('.frames')).append(frame.createElement());
         }
         player = new Rokuga.FramesPlayer({

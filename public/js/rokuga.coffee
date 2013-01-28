@@ -77,7 +77,7 @@ Rokuga.createVideoAndWaitForLoad = (url) ->
     src: url
 
   $video.one 'canplay', ->
-    can_play.done $video
+    can_play.resolve $video
 
   $video.one 'error', (error) ->
     can_play.fail error
@@ -251,6 +251,7 @@ $ ->
     do $('.drop-here').remove
 
     (Rokuga.createVideoAndWaitForLoad urls[0]).done ($video) ->
+
       ($ '.sampling-preview').append $video
 
       (Rokuga.recordVideoAsURLList ($video.get 0), 8).done (image_urls) ->
@@ -258,7 +259,8 @@ $ ->
         do $('.controllers').show
         do ($ '.player').show
 
-        for frame in Rokuga.createUniqueFrames image_urls
+        frames = Rokuga.createUniqueFrames image_urls
+        for frame in frames
           ($ '.frames').append do frame.createElement
 
         player = new Rokuga.FramesPlayer
