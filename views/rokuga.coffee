@@ -12,6 +12,7 @@ class Rokuga.FileHandler
   constructor: (args) ->
     @$container = args.$container
     throw "$container required" unless @$container
+    @$file_input = args.$file_input
     @bindEvents()
 
   bindEvents: ->
@@ -37,6 +38,14 @@ class Rokuga.FileHandler
           ($ this).trigger 'data_url_prepared', [contents]
 
       false
+
+    @$file_input.on 'change', (jquery_event) =>
+      console.log jquery_event
+      console.log jquery_event.originalEvent
+      console.log jquery_event.originalEvent.files
+      console.log (@$file_input.get 0 ).files
+      (@readFiles (@$file_input.get 0 ).files).done (contents) =>
+          ($ this).trigger 'data_url_prepared', [contents]
 
   readFiles: (files) ->
     read_all = do $.Deferred
@@ -313,8 +322,8 @@ Rokuga.saveToGallery = (url) ->
 
 $ ->
   file_handler = new Rokuga.FileHandler
-    $container: $('.drop-here')
-    type: /^video\/$/
+    $container: $ '.drop-here'
+    $file_input: $ 'input[type="file"]'
   $(file_handler)
   .on 'enter', ->
     $('.drop-here').addClass 'active'
