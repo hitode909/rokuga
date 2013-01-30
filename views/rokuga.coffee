@@ -40,10 +40,6 @@ class Rokuga.FileHandler
       false
 
     @$file_input.on 'change', (jquery_event) =>
-      console.log jquery_event
-      console.log jquery_event.originalEvent
-      console.log jquery_event.originalEvent.files
-      console.log (@$file_input.get 0 ).files
       (@readFiles (@$file_input.get 0 ).files).done (contents) =>
           ($ this).trigger 'data_url_prepared', [contents]
 
