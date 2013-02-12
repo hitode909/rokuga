@@ -105,10 +105,10 @@ Rokuga.recordVideoAsURLList = (video, fps) ->
 
   Rokuga.addTaskGuard reached_end
 
-  $(video).on 'timeupdate', ->
+  ($ video).on 'timeupdate', ->
     unless video.currentTime < video.duration
       reached_end.resolve images
-      $(this).off 'timeupdate'
+      ($ this).off 'timeupdate'
       return
     context.drawImage video, 0, 0, video.videoWidth, video.videoHeight
     images.push do canvas.toDataURL
