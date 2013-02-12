@@ -108,16 +108,13 @@ Rokuga.recordVideoAsURLList = (video, fps) ->
   $(video).on 'timeupdate', ->
     unless video.currentTime < video.duration
       reached_end.resolve images
-      clearInterval shot_timer
       $(this).off 'timeupdate'
       return
     context.drawImage video, 0, 0, video.videoWidth, video.videoHeight
     images.push do canvas.toDataURL
+    video.currentTime += 1/fps
 
   video.currentTime = 0
-
-  shot_timer = setInterval ->
-    video.currentTime += 1/fps
 
   do reached_end.promise
 
